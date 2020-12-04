@@ -1,4 +1,5 @@
 import pygame
+import time
 
 pygame.init()
 DISPLAY_SIZE = 600
@@ -9,8 +10,11 @@ pygame.display.set_caption('hide & seek')
 HIDER = pygame.image.load('virus.png').convert()
 pygame.display.set_icon(HIDER)
 SEEKER = pygame.image.load('mask.png').convert()
-
-
+""""
+#init positions of SEEKER and HIDER
+SEEKER_INIT = (2,2)     #human
+HIDER_INIT = (23,23)    #virus
+"""
 GREY = pygame.Color(158,158,158)
 YELLOW = pygame.Color(255, 193, 7)
 BLACK = pygame.Color(0, 0, 0)
@@ -22,11 +26,47 @@ COLORS = {
   '4': YELLOW,
 }
 
+map = []
+
+def loadMapToArr(path):
+  mapString = getMapString(path)
+  mapSize = getMapSize(path)
+  row = []
+  for number in mapString:
+    if number != '\n':
+      row.append(int(number))
+    else:
+      map.append(row)
+      row = []
+
+def ableTomove
+
 def setupGame(path):
   drawMap(path)
-
+  mapString = getMapString(path)
+  mapSize = getMapSize(path)
+  squareSize = int(DISPLAY_SIZE / mapSize)
+  loadMapToArr(path)
+  print(map)
+  #Posion Seeker:
+  Seek_xCoor = 1*squareSize #SEEKER_INIT[0]
+  Seek_yCoor = 1*squareSize #SEEKER_INIT[1]
+  #Position Hider:
+  Hide_xCoor = 23*squareSize #HIDER_INIT[0]
+  Hide_yCoor = 23*squareSize #HIDER_INIT[1]
   RUNNING = True
   while RUNNING:
+    #Draw Seeker:
+    COLORS['3'].set_colorkey
+    screen.blit(COLORS['3'], (Seek_xCoor, Seek_yCoor))
+    #Draw Hider:
+    COLORS['2'].set_colorkey
+    screen.blit(COLORS['2'], (Hide_xCoor, Hide_yCoor))
+    #Seek run to...: Algorithm here....
+    time.sleep(0.3)
+    Seek_xCoor +=squareSize
+    Hide_xCoor +=squareSize
+
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         RUNNING = False
@@ -56,12 +96,8 @@ def drawMap(path):
   yCoor = 0
   count = 0
   for number in mapString:
-    if (number != '\n'):
-      if (number != '2' and number != '3'):
-        pygame.draw.rect(screen, COLORS[number], [xCoor, yCoor, squareSize, squareSize])
-      else:
-        COLORS[number].set_colorkey
-        screen.blit(COLORS[number], (xCoor, yCoor))
+    if (number != '\n' and number != ','):
+      pygame.draw.rect(screen, COLORS[number], [xCoor, yCoor, squareSize, squareSize])
       xCoor += squareSize
       count += 1
     if (count == mapSize):
@@ -69,4 +105,4 @@ def drawMap(path):
       xCoor = 0
       count = 0
 
-setupGame('map42.txt')
+setupGame('map11.txt')
