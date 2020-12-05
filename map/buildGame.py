@@ -147,7 +147,7 @@ def loadChildToBFSTree(x,y):  #insert childern to frontier:
   if ableToMoveLeft(x,y) == True and isPosInExpanded(x-1,y) == False  and isPosInFrontier(x-1,y) == False:
     appendToArray(x-1,y)
 
-def loadMapToArr(path):
+def loadMapToArr(path):   #load map from txt file to array map[]
   mapString = getMapString(path)
   mapSize = getMapSize(path)
   row = []
@@ -158,90 +158,86 @@ def loadMapToArr(path):
       map.append(row)
       row = []
 
-listofNeighbourExplored = []
-def isCoorInArr(coor,Arr):
+listofNeighbourExplored = []    #similar to Frontier
+
+def isCoorInArr(coor,Arr):      #check whether the child is in Frontier
   for number in range(len(Arr)):
     if coor.isEqual(Arr[number]):
       return True
   return False
-def findNeighbours(coor):
+
+def showArrCoor(Arr):
+  for i in range(len(Arr)):
+    Arr[i].printCoor()
+
+def findNeighbours(coor):     #find children of coor
   ret = []
-  if ableToMoveUpLeft(coor.getX(),coor.getY()) == True:
-    tempCoor = coor
-    tempCoor.moveUpLeft();
-    ret.append(tempCoor)
-    print(tempCoor.getX(),tempCoor.getY(),".......")
-    listofNeighbourExplored.append(tempCoor)
-  if ableToMoveUp(coor.getX(),coor.getY()) == True:
-    tempCoor = coor
-    tempCoor.moveUpNone();
-    ret.append(tempCoor)
-    print(tempCoor.getX(),tempCoor.getY(),".......")
-    listofNeighbourExplored.append(tempCoor)
-  if ableToMoveUpRight(coor.getX(),coor.getY()) == True:
-    tempCoor = coor
-    tempCoor.ableToMoveUpRight();
-    ret.append(tempCoor)
-    print(tempCoor.getX(),tempCoor.getY(),".......")
-    listofNeighbourExplored.append(tempCoor)
-  if ableToMoveRight(coor.getX(),coor.getY()) == True:
-    tempCoor = coor
-    tempCoor.moveNoneRight();
-    ret.append(tempCoor)
-    print(tempCoor.getX(),tempCoor.getY(),".......")
-    listofNeighbourExplored.append(tempCoor)
-  if ableToMoveDownRight(coor.getX(),coor.getY()) == True:
-    tempCoor = coor
-    tempCoor.moveDownRight();
-    ret.append(tempCoor)
-    print(tempCoor.getX(),tempCoor.getY(),".......")
-    listofNeighbourExplored.append(tempCoor)
-  if ableToMoveDown(coor.getX(),coor.getY()) == True:
-    tempCoor = coor
-    tempCoor.moveDownNone();
-    ret.append(tempCoor)
-    print(tempCoor.getX(),tempCoor.getY(),".......")
-    listofNeighbourExplored.append(tempCoor)
-  if ableToMoveDownLeft(coor.getX(),coor.getY()) == True:
-    tempCoor = coor
-    tempCoor.moveDownLeft();
-    ret.append(tempCoor)
-    print(tempCoor.getX(),tempCoor.getY(),".......")
-    listofNeighbourExplored.append(tempCoor)
-    for m in range(len(listofNeighbourExplored)):
-      print(range(len(listofNeighbourExplored)), m)
-      print(listofNeighbourExplored[m].getX(),",",listofNeighbourExplored[m].getY()," ")
-  if ableToMoveLeft(coor.getX(),coor.getY()) == True:
-    tempCoor = coor
-    tempCoor.moveNoneLeft();
-    ret.append(tempCoor)
-    print(tempCoor.getX(),tempCoor.getY(),".......")
-    listofNeighbourExplored.append(tempCoor)
-    for m in range(len(listofNeighbourExplored)):
-      print(range(len(listofNeighbourExplored)), m)
-      print(listofNeighbourExplored[m].getX(),",",listofNeighbourExplored[m].getY()," ")
+  if ableToMoveUpLeft(coor.getX(),coor.getY()) == True and isCoorInArr(Coordinate(coor.getX()-1,coor.getY()-1),listofNeighbourExplored)== False:
+    ret.append(Coordinate(coor.getX()-1,coor.getY()-1))
+  if ableToMoveUp(coor.getX(),coor.getY()) == True and isCoorInArr(Coordinate(coor.getX(),coor.getY()-1),listofNeighbourExplored)== False:
+    ret.append(Coordinate(coor.getX(),coor.getY()-1))
+  if ableToMoveUpRight(coor.getX(),coor.getY()) == True and isCoorInArr(Coordinate(coor.getX()+1,coor.getY()-1),listofNeighbourExplored)== False:
+    ret.append(Coordinate(coor.getX()+1,coor.getY()-1))
+  if ableToMoveRight(coor.getX(),coor.getY()) == True and isCoorInArr(Coordinate(coor.getX()+1,coor.getY()),listofNeighbourExplored)== False:
+    ret.append(Coordinate(coor.getX()+1,coor.getY()))
+  if ableToMoveDownRight(coor.getX(),coor.getY()) == True and isCoorInArr(Coordinate(coor.getX()+1,coor.getY()+1),listofNeighbourExplored)== False:
+    ret.append(Coordinate(coor.getX()+1,coor.getY()+1))
+  if ableToMoveDown(coor.getX(),coor.getY()) == True and isCoorInArr(Coordinate(coor.getX(),coor.getY()+1),listofNeighbourExplored)== False:
+    ret.append(Coordinate(coor.getX(),coor.getY()+1))
+  if ableToMoveDownLeft(coor.getX(),coor.getY()) == True and isCoorInArr(Coordinate(coor.getX()-1,coor.getY()+1),listofNeighbourExplored)== False:
+    ret.append(Coordinate(coor.getX()-1,coor.getY()+1))
+  if ableToMoveLeft(coor.getX(),coor.getY()) == True and isCoorInArr(Coordinate(coor.getX()-1,coor.getY()),listofNeighbourExplored) == False:
+    ret.append(Coordinate(coor.getX()-1,coor.getY()))
   return ret
 
-def buildGraphTree():
-  rootCoor = Coordinate(1,1)
+def buildCoorAccessors(coor):
+  rootCoor = coor
   root = TreeNode(rootCoor)
-  tempArr = findNeighbours(root.getData())
-  for i in range(len(tempArr)):
-    tempNode = TreeNode(tempArr[i])
-    root.addChild(tempNode)
-  for m in range(len(listofNeighbourExplored)):
-    print(range(len(listofNeighbourExplored)), m)
-    print(listofNeighbourExplored[m].getX(),",,",listofNeighbourExplored[m].getY()," ")
-
-  # numberRow =1
-  # numberCol =1
-  # while numberRow < 25:
-  #   while numberCol < 25:
-  #     if map[numberRow][numberCol]
-  #     number of
-  #   numberCol =1
-  #   numberRow +=1
+  tempArrNei = findNeighbours(root.getData())
+  for i in range(len(tempArrNei)):
+    tempNode = TreeNode(tempArrNei[i])
+    if isCoorInArr(tempNode.getData(),listofNeighbourExplored) == False:
+      root.addChild(tempNode)
+      listofNeighbourExplored.append(tempArrNei[i])
   return root
+
+
+def checkGoal(Role,Goal):
+  if Role.isEqual(Goal.getCoor()) == True:
+    return True
+  else: return False
+
+def moveToANode(Node, Role):   #From a Coor of Role (Seeker/Hider) move to a Node (its Parent or Child), check whether goal is there, if not move back to Pa
+  #Move Role to Coor of Node:
+  if Node != None:
+    pygame.draw.rect(screen, COLORS['0'], [Role.getX()*24, Role.getY()*24, 24, 24])
+    time.sleep(0.15)
+    removeRange(Role)
+    Role.movePlayerToCoor(Node.getData())
+    drawPlayer(Role)
+  return Role
+
+def drawPlayer(Role):
+  COLORS[Role.getValue()].set_colorkey
+  screen.blit(COLORS[Role.getValue()], (Role.getX()*24, Role.getY()*24))
+  if(Role.getValue() == '3'):
+    drawRange(Role.getX(),Role.getY())
+
+def removeRange(Role):
+  clearPreRange(Role.getX(),Role.getY())
+
+def pathGoal(Node, Role, Goal, i):
+  Node.takeChildren(buildCoorAccessors(Role.getCoor()))
+  if checkGoal(Role, Goal) == True:
+    return True
+  else:
+    #Kiem tra ko dung Goal --> move ve Parent
+    Role = moveToANode(Node,Role)
+    while i < len(Node.children):
+      Role = moveToANode(Node.children[i],Role)
+      return pathGoal(Node.children[i],Role,Goal,i)
+      i +=1
+    return False
 
 def setupGame(path):
   drawMap(path)
@@ -249,46 +245,36 @@ def setupGame(path):
   mapSize = getMapSize(path)
   squareSize = int(DISPLAY_SIZE / mapSize)
   loadMapToArr(path)
+  i = 0
 
-  buildGraphTree()
-  print(map)
-
+  #Initialize Seeker and their children
   seeker = Seeker()
-  drawRange(seeker.getX(),seeker.getY())
-  hider = Hider()
+  rootOfTreeNode = TreeNode(Coordinate(1,1))
+  print(range(len(rootOfTreeNode.children)))
+  showArrCoor(listofNeighbourExplored)
+  listOfExpanded = []
 
-  loadChildToBFSTree(seeker.getX(), seeker.getY())
-  
+  #Initialize Hider
+  hider = Hider()
+  #loadChildToBFSTree(seeker.getX(), seeker.getY())
+  #-------------
   RUNNING = True
   while RUNNING:
-
     #Draw Seeker:
-    COLORS['3'].set_colorkey
-    screen.blit(COLORS['3'], (seeker.getX()*squareSize, seeker.getY()*squareSize))
-    drawRange(seeker.getX(),seeker.getY())
+    drawPlayer(seeker)
     #Draw Hider:
-    COLORS['2'].set_colorkey
-    screen.blit(COLORS['2'], (hider.getX()*squareSize, hider.getY()*squareSize))
-
-
-    #Seek run to...: Algorithm here....
-    time.sleep(0.15)
-    expandPos = []
-    expandPos = ExpandPosFromFrontier()
-    if expandPos[0] != -1:
-      pygame.draw.rect(screen, COLORS['0'], [seeker.getX()*squareSize, seeker.getY()*squareSize, squareSize, squareSize]) #squareSize=squareSize
-      clearPreRange(seeker.getX(),seeker.getY())
-      seeker.setXY(expandPos[0],expandPos[1])
-      drawRange(seeker.getX(),seeker.getY())
-
-
-      if seeker.getX() == hider.getY() and seeker.getY() == hider.getY():     #Check goal
+    drawPlayer(hider)
+    if(i <len(listOfExpanded)):
+      if checkGoal(seeker, hider) == True:
         RUNNING = False
-        print("Thay r")
+      time.sleep(0.15)
+      seeker = moveToANode(listOfExpanded[i],seeker)
+      i+=1
+    listOfExpanded.extend(buildCoorAccessors(seeker.getCoor()).children) #array childern
+    # #check goal:
+    # print(pathGoal(rootOfTreeNode,seeker,hider,0))
 
-      COLORS['3'].set_colorkey
-      screen.blit(COLORS['3'], (seeker.getX()*squareSize, seeker.getY()*squareSize))
-      loadChildToBFSTree(seeker.getX(),seeker.getY())
+    
 
     for event in pygame.event.get():
       if event.type == pygame.QUIT:

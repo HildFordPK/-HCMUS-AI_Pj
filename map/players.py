@@ -25,6 +25,8 @@ class Coordinate:
 		self.xcoor -= 1
 	def moveNoneLeft(self):
 		self.xcoor -= 1
+	def getCoor(self):
+		return self
 	def getX(self):
 		return self.xcoor
 	def getY(self):
@@ -40,66 +42,45 @@ class Coordinate:
 		if self.xcoor ==Coor.xcoor and self.ycoor == Coor.ycoor :
 			return True
 		return False
+	def printCoor(self):
+		print(" (",self.getX(),",",self.getY(),") ")
 
 	def getUpLeft(self):
 		return Coordinate(self)
 
+	def __eq__(self, coorx):
+		if self.getX() == coorx.getX() and self.getY() == coorx.getY():
+			return True
+		return False
+	def __ne__(self,coorx):
+		if self.getX() != coorx.getX() or self.getY() != coorx.getY():
+			return True
+		return False
+
+	def movePlayerToCoor(self,Coor):
+		self.setXY(Coor.getX(),Coor.getY())
+
+	def abletoMoveToACoor(self,Coor):
+		if abs(Coor.getX() - self.getX()) > 2 or abs(Coor.getY() - self.getY())>2:
+			return False
+		return True
+
 class Seeker(Coordinate):
 	def __init__(self):
 		self.setXY(1,1)
-		self.value =3
+		self.value = '3'
+	def getValue(self):
+		return self.value
+	def copy(self, seekerx):
+		self.setXY(seekerx.getX(),seekerx.getY())
 
 class Hider(Coordinate):
 	num_of_hiders = 0
 	def __init__(self):
 		self.setXY(23,23)
-		self.value =2
+		self.value = '2'
 		Hider.num_of_hiders += 1	#number of hiders hiding
+	def getValue(self):
+		return self.value
 
 #----------------------------------------------------------------------
-
-
-def getMapString(path):
-  f = open(path, 'r')
-  next(f)       ##bo dong dau tien
-  mapString = f.read()
-  f.close()
-  return mapString
-
-def getMapSize(path):
-  f = open(path, 'r')
-  firstLine = f.readline()        
-  size = int(firstLine[0] + firstLine[1])
-  f.close()
-  return size
-
-def drawMap(path):
-  global DISPLAY_SIZE
-  mapString = getMapString(path)
-  mapSize = getMapSize(path)
-  squareSize = int(DISPLAY_SIZE / mapSize)
-  xCoor = 0
-  yCoor = 0
-  count = 0
-  for number in mapString:
-    if (number != '\n'):
-      pygame.draw.rect(screen, COLORS[number], [xCoor, yCoor, squareSize, squareSize])
-      xCoor += squareSize
-      count += 1
-    if (count == mapSize):
-      yCoor += squareSize 
-      xCoor = 0
-      count = 0
-
-map = []
-def loadMapToArr(path):
-  mapString = getMapString(path)
-  mapSize = getMapSize(path)
-  row = []
-  for number in mapString:
-    if number != '\n':
-      row.append(int(number))
-    else:
-      map.append(row)
-      row = []
-
