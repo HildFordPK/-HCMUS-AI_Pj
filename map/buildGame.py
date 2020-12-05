@@ -20,12 +20,14 @@ HIDER_INIT = (23,23)    #virus
 GREY = pygame.Color(158,158,158)
 YELLOW = pygame.Color(255, 193, 7)
 BLACK = pygame.Color(0, 0, 0)
+LIGHT_YELLOW = pygame.Color(214, 217, 176)
 COLORS = {
   '0': BLACK,
   '1': GREY,
   '2': HIDER,
   '3': SEEKER,
   '4': YELLOW,
+  '5': LIGHT_YELLOW,
 }
 
 map = []
@@ -37,6 +39,45 @@ def valueXYinArrMap( x,y):
   return map[y][x]
 
 
+#Vision:
+def drawRange(coorX,coorY):
+  if(ableToMoveDown(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [coorX*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUp(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [coorX*24, (coorY-1)*24, 24, 24])
+  if(ableToMoveLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX-1)*24, coorY*24, 24, 24])
+  if(ableToMoveRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX+1)*24, coorY*24, 24, 24])
+  
+  if(ableToMoveDownLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX-1)*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUpLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX-1)*24, (coorY-1)*24, 24, 24])
+  if(ableToMoveDownRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX+1)*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUpRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX+1)*24, (coorY-1)*24, 24, 24])
+
+def clearPreRange(coorX, coorY):
+  if(ableToMoveDown(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [coorX*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUp(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [coorX*24, (coorY-1)*24, 24, 24])
+  if(ableToMoveLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX-1)*24, coorY*24, 24, 24])
+  if(ableToMoveRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX+1)*24, coorY*24, 24, 24])
+  
+  if(ableToMoveDownLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX-1)*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUpLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX-1)*24, (coorY-1)*24, 24, 24])
+  if(ableToMoveDownRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX+1)*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUpRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX+1)*24, (coorY-1)*24, 24, 24])
+#end Vision
 def ExpandPosFromFrontier():
   ret = []
   if range(len(bfsTree)) == 0 :
@@ -180,6 +221,7 @@ def findNeighbours(coor):
       print(range(len(listofNeighbourExplored)), m)
       print(listofNeighbourExplored[m].getX(),",",listofNeighbourExplored[m].getY()," ")
   return ret
+
 def buildGraphTree():
   rootCoor = Coordinate(1,1)
   root = TreeNode(rootCoor)
@@ -189,7 +231,7 @@ def buildGraphTree():
     root.addChild(tempNode)
   for m in range(len(listofNeighbourExplored)):
     print(range(len(listofNeighbourExplored)), m)
-    print(listofNeighbourExplored[m].getX(),",",listofNeighbourExplored[m].getY()," ")
+    print(listofNeighbourExplored[m].getX(),",,",listofNeighbourExplored[m].getY()," ")
 
   # numberRow =1
   # numberCol =1
@@ -210,14 +252,11 @@ def setupGame(path):
 
   buildGraphTree()
   print(map)
-  #Posion Seeker:
-  #seeker.getX() = 1*squareSize #SEEKER_INIT[0]
-  #seeker.getY() = 1*squareSize #SEEKER_INIT[1]
-  #Position Hider:
-  #Hide_xCoor = 23*squareSize #HIDER_INIT[0]
-  #Hide_yCoor = 23*squareSize #HIDER_INIT[1]
+
   seeker = Seeker()
+  drawRange(seeker.getX(),seeker.getY())
   hider = Hider()
+
   loadChildToBFSTree(seeker.getX(), seeker.getY())
   
   RUNNING = True
@@ -226,18 +265,22 @@ def setupGame(path):
     #Draw Seeker:
     COLORS['3'].set_colorkey
     screen.blit(COLORS['3'], (seeker.getX()*squareSize, seeker.getY()*squareSize))
+    drawRange(seeker.getX(),seeker.getY())
     #Draw Hider:
     COLORS['2'].set_colorkey
     screen.blit(COLORS['2'], (hider.getX()*squareSize, hider.getY()*squareSize))
 
 
     #Seek run to...: Algorithm here....
-    time.sleep(0.3)
+    time.sleep(0.15)
     expandPos = []
     expandPos = ExpandPosFromFrontier()
     if expandPos[0] != -1:
       pygame.draw.rect(screen, COLORS['0'], [seeker.getX()*squareSize, seeker.getY()*squareSize, squareSize, squareSize]) #squareSize=squareSize
+      clearPreRange(seeker.getX(),seeker.getY())
       seeker.setXY(expandPos[0],expandPos[1])
+      drawRange(seeker.getX(),seeker.getY())
+
 
       if seeker.getX() == hider.getY() and seeker.getY() == hider.getY():     #Check goal
         RUNNING = False

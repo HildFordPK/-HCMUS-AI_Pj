@@ -2,8 +2,6 @@
 
 class Coordinate:
 	value = -1
-	xcoor = 0
-	ycoor = 0
 	def __init__(self, x, y):
 		self.xcoor = x
 		self.ycoor = y
