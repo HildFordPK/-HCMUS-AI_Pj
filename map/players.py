@@ -69,10 +69,21 @@ class Seeker(Coordinate):
 	def __init__(self):
 		self.setXY(1,1)
 		self.value = '3'
+		self.rangeVision = []
+		self.rangefind = []
+		self.rangefind.append(self)
 	def getValue(self):
 		return self.value
 	def copy(self, seekerx):
 		self.setXY(seekerx.getX(),seekerx.getY())
+	def appendRange(self,coorRange):
+		self.rangeVision.append(coorRange)
+	def posFind(self,coorRange):
+		self.rangefind.append(coorRange)
+	def resetRange(self):
+		self.rangefind = []
+		self.rangeVision = []
+		self.rangefind.append(self)
 
 class Hider(Coordinate):
 	num_of_hiders = 0
